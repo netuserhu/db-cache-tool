@@ -1,4 +1,4 @@
-
+require('../styles/App.css');
 import 'antd/dist/antd.css';
 import 'nprogress/nprogress.css';
 require('codemirror/lib/codemirror.css');

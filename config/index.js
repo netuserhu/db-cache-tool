@@ -48,7 +48,8 @@ const config = {
     '/movie/cinema': 'http://localhost:9000',
     '/movie/cinema_detail': 'http://localhost:9000',
     '/movie/swiper': 'http://localhost:9000',
-    '/movie/city': 'http://localhost:9000'
+    '/movie/city': 'http://localhost:9000',
+    '/db/getConnection': 'http://localhost:9000'
   },
 
   // ----------------------------------

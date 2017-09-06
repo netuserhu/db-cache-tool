@@ -29,24 +29,11 @@ app.get('/__webpack_hmr', function(req, res) {
   res.send('')
 })
 
-app.get(/\/movie\/hot\//, routes.hot);
-app.get(/\/movie\/cinema\//, routes.cinema);
-app.get(/\/movie\/info\//, routes.info);
-app.get(/\/movie\/evaluation\//, routes.evaluation);
-app.get(/\/movie\/coming\//, routes.coming);
-app.get(/\/movie\/coming\/[\w\W]*/, routes.comingLimit);
 
 app.get('/movie/swiper', routes.swiper);
 app.get('/movie/city', routes.city);
 app.get('/movie/cinema_detail', routes.cinema_detail);
-
-
-app.get('/app', routes.index);
-app.get('/', (req, res) => {
-    res.redirect('app');
-});
-app.get(/\/movie\/detail\//, routes.index);
-app.get(/\/cinema/, routes.index);
+app.get('/db/getConnection', routes.getConnection)
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
