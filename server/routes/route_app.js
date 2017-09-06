@@ -30,7 +30,14 @@ function sendDataFn(req, res, filename, needcity) {
     })
 }
 
-
+function sendResult(res, result){
+   let sendData = {
+            errno: 0,
+            msg: 'ok',
+            data: result
+        };
+   res.send(JSON.stringify(sendData));
+}
 
 
 exports.swiper = (req, res) => {
@@ -46,6 +53,23 @@ exports.cinema_detail = (req, res) => {
 }
 
 exports.getConnection = (req, res) => {
-    let dbinfo = Db_Manager.selectConnections();
-    res.send(dbinfo);
+    Db_Manager.selectConnections((err,result)=>{
+        res.send(sendResult(res, result));
+    });
+    
 }
+
+exports.getSchemaList = (req, res) => {
+   let {id} = req.params;
+   Db_Manager.getSchemaList(id, (err,result)=>{
+       res.send(sendResult(res,result));
+   });
+
+};
+
+exports.getTableList = (req, res) => {
+   let {db, schema} = req.params;
+   Db_Manager.getTableList(db, schema,(err, result)=>{
+     res.send(sendResult(res,schemas));
+   });
+};

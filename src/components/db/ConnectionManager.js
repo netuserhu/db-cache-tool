@@ -1,5 +1,6 @@
 require('../../styles/ConnectionManager.css');
-import React, { Component } from 'react'
+import React, { Component} from 'react';
+import {Link} from 'react-router';
 import {Layout, Menu, Icon, Button} from 'antd';
 const {Header, Content, Footer, Sider} = Layout;
 
@@ -12,19 +13,20 @@ class ConnectionManager extends Component {
   }
 
   componentWillMount(){
-    fetch('/db/getConnection').then((resp) => {
-      debugger;
-       alert(resp)
-       alert(JSON.stringify(resp))
-       //this.setState({dbConnections:JSON.parse(resp)});
+    fetch('/db/getConnection').then(response => response.json()).then(resp => { 
+       this.setState({dbConnections:resp.data});
     });
   }
 
+
   render() {
     let menuContent = this.state.dbConnections.map(p=>{
-       return <Menu.Item key={p.connectionName}>
+       let _datainfo = {id:p.ID, host:p.HOST, port:p.PORT, user:p.USER_NAME, password:p.PASSWORD, schema: p.SCHEMA};
+       _datainfo = JSON.stringify(_datainfo);
+       let path = `/db/manager/${_datainfo}`;
+       return <Menu.Item key={p.CONNECTION_NAME}>
               <Icon type="user" />
-              <span className="nav-text">p.connectionName</span>
+              <span className="nav-text"><Link to={path}>{p.CONNECTION_NAME}</Link></span>
             </Menu.Item>;
     });
     return (

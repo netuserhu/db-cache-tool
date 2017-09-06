@@ -11,7 +11,7 @@ import reducers from './reducers';
 import {createStore} from './util/globalStore';
 
 import ConnectionManager from './components/db/ConnectionManager';
-
+import MysqlManager from './components/db/MysqlManager';
 
 // Render the main component into the dom
 ReactDOM.render(
@@ -19,10 +19,11 @@ ReactDOM.render(
   		<Router history={hashHistory} >
   			<Route path="/" component={App}>
 			    <Route path="db">
-			    	<Route path="manager" component={ConnectionManager} />
-				    <IndexRedirect to="/db/manager" />
+			    	<Route path="list" component={ConnectionManager} />
+			    	<Route path="manager/:data" component={MysqlManager} />
+				    <IndexRedirect to="/db/list" />
 			    </Route>
-			    <IndexRedirect to="/db/manager" />
+			    <IndexRedirect to="/db/list" />
 		    </Route>
 		</Router>
   	</Provider>

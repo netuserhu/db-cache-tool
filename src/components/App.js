@@ -28,7 +28,7 @@ class App extends React.Component {
 
   constructor(props) {
   	super(props);
-  	this.state = { activeItem: '首页', current: '/db/manager', user: {aliasName: '', realName: ''}, sidebarMenu: {} };
+  	this.state = { activeItem: '首页', current: '/db/list', user: {aliasName: '', realName: ''}, sidebarMenu: {} };
   }
 
   componentDidMount() {
@@ -78,11 +78,11 @@ class App extends React.Component {
                   mode="horizontal"
                   style={{ lineHeight: '64px', backgroundColor: '#373d41' }}
                 >
-                  <Menu.Item key="/db/manager">
-                    <a href="/#/db/manager" rel="noopener noreferrer"><Icon type="appstore" />DB管理</a>
+                  <Menu.Item key="/db/list">
+                    <a href="/#/db/list" rel="noopener noreferrer"><Icon type="appstore" />DB管理</a>
                   </Menu.Item>
-                  <Menu.Item key="/redis/manager">
-                    <a href="/#/redis/manager" rel="noopener noreferrer"><Icon type="bars" />Redis列表</a>
+                  <Menu.Item key="/redis/list">
+                    <a href="/#/redis/list" rel="noopener noreferrer"><Icon type="bars" />Redis列表</a>
                   </Menu.Item>
                   <Menu.Item key="/tool/compare">
                     <a href="/#/document/list" rel="noopener noreferrer"><Icon type="file" />对比工具</a>

@@ -33,7 +33,12 @@ app.get('/__webpack_hmr', function(req, res) {
 app.get('/movie/swiper', routes.swiper);
 app.get('/movie/city', routes.city);
 app.get('/movie/cinema_detail', routes.cinema_detail);
-app.get('/db/getConnection', routes.getConnection)
+
+
+app.get('/db/getConnection', routes.getConnection);
+app.get(/db\/schema\/list\/:db/, routes.getSchemaList);
+app.get('/db/table/list/:db/:schema', routes.getTableList);
+
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
