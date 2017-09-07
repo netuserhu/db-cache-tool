@@ -31,12 +31,16 @@ function sendDataFn(req, res, filename, needcity) {
 }
 
 function sendResult(res, result){
-   let sendData = {
+   try{
+     let sendData = {
             errno: 0,
             msg: 'ok',
             data: result
-        };
-   res.send(JSON.stringify(sendData));
+      };
+     res.send(JSON.stringify(sendData));
+   }catch(err){
+     console.error("出错了，原因是:"+err);
+   }
 }
 
 
@@ -54,22 +58,41 @@ exports.cinema_detail = (req, res) => {
 
 exports.getConnection = (req, res) => {
     Db_Manager.selectConnections((err,result)=>{
-        res.send(sendResult(res, result));
+        sendResult(res, result);
     });
     
 }
 
 exports.getSchemaList = (req, res) => {
-   let {id} = req.params;
-   Db_Manager.getSchemaList(id, (err,result)=>{
-       res.send(sendResult(res,result));
+   let {db} = req.params;
+   Db_Manager.getSchemaList(db, (err , result, fields)=>{
+       if(err){
+         sendResult(res,err);
+       }else{
+         sendResult(res,result);
+       }
    });
 
 };
 
 exports.getTableList = (req, res) => {
    let {db, schema} = req.params;
-   Db_Manager.getTableList(db, schema,(err, result)=>{
-     res.send(sendResult(res,schemas));
+   Db_Manager.getTableList(db, schema,(err, results, fields)=>{
+     if(err){
+       sendResult(res, err);
+     }else{
+       let columnName = fields[0].name;
+       let tableNames = results.map(p=>{
+         return p[columnName];
+       });
+       sendResult(res, tableNames);
+     }
    });
+};
+
+exports.commands = (req, res) =>{
+  let {id, schema, commands} = req.body;
+  Db_Manager.commands(id, schema, commands, (err, result)=>{
+      sendResult(res, '111');
+  });
 };

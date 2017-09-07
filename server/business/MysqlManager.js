@@ -1,17 +1,32 @@
 var mysql=require("mysql");  
-var pool = mysql.createPool({  
-    host: 'localhost',  
-    user: 'user',  
-    password: 'password',  
-    database: 'database',  
-    port: port  
-});  
+var SqliteManager = require('./SqliteManager');
+var pools = {};
   
-var query=function(sql,options,callback){  
+exports.query=function(db, sql,options,callback){  
+    let pool = pools[db];
+    if(!pool){
+      SqliteManager.selectOne('select * from db_info where id='+db, function(err, obj){
+         let {HOST,PORT, USER_NAME,PASSWORD,SCHEMA} = obj;
+         pool = mysql.createPool({  
+           host: HOST,  
+           user: USER_NAME,  
+           password: PASSWORD,  
+           database: SCHEMA,  
+           port: PORT
+         });  
+         pools[db] = pool;
+         queryByConnection(pool, sql, options, callback);
+      });
+    }else{
+         queryByConnection(pool, sql, options, callback);
+    }
+}; 
+
+queryByConnection = function(pool, sql , options , callback){
     pool.getConnection(function(err,conn){  
-        if(err){  
+        if(err){
             callback(err,null,null);  
-        }else{  
+        }else{
             conn.query(sql,options,function(err,results,fields){  
                 //释放连接  
                 conn.release();  
@@ -20,6 +35,5 @@ var query=function(sql,options,callback){
             });  
         }  
     });  
-};  
+}
   
-module.exports=query;

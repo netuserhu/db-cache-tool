@@ -1,9 +1,5 @@
 var SqliteManager = require('./SqliteManager');
-
-let dbInfo = [
-  {"id": 1, "connectionName":"dev_open_platform","host":"10.9.51.13","port":3008,"username":"user_oplatform","password":"open_platform","schema":""},
-  {"id": 2, "connectionName":"dev_carmen","host":"10.9.23.250","port":3008,"username":"user_carmen","password":"3PEMWC6XXW9Mn2DJYd2M","schema":"saas_carmen"}
-];
+var MysqlManager = require('./MysqlManager');
 
 let schemas = ["aaaa","bbbb"];
 
@@ -15,11 +11,25 @@ exports.selectConnections = function(callback){
 
 
 exports.getSchemaList = function(id, callback){
-   SqliteManager.select('select * from DB_INFO where id ='+id ,function(err, res){
-      callback(err,res);
+   MysqlManager.query(id,'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA', null ,function(err, results,fields){
+      callback(err , results, fields);
    });
 };
 
-exports.getTableList = function(db, schema, callback){
-   return schemas;
+exports.getTableList = function(id, schema, callback){
+   MysqlManager.query(id,'show tables from '+schema, null ,function(err,results,fields){
+      callback(err,results,fields);
+   });
 };
+
+exports.commands = function(id, schema, commands, callback){
+   let commandArray = commands.split(';');
+   for(let i=0; i<commandArray.length; i++){
+     console.log(commandArray[i].trim()); 
+   }
+   callback(null , null);
+};
+
+String.prototype.trim = function() { 
+  return this.replace(/(^\s*)|(\s*$)/g, ''); 
+}; 

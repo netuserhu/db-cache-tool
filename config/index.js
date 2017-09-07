@@ -51,7 +51,8 @@ const config = {
     '/movie/city': 'http://localhost:9000',
     '/db/getConnection': 'http://localhost:9000',
     '/db/schema/list': 'http://localhost:9000',
-    '/db/table/list': 'http://localhost:9000'
+    '/db/table/list': 'http://localhost:9000',
+    '/db/command':'http://localhost:9000'
   },
 
   // ----------------------------------

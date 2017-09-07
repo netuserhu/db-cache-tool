@@ -32,7 +32,13 @@ exports.select = function(sql, callback) {
 		db.all(sql, callback);
 		db.close();
 	});
-    
+};
+
+exports.selectOne = function(sql, callback) {
+	let db = new sqlite3.Database(dbAbsoluteName,function(){
+		db.get(sql, callback);
+		db.close();
+	});
 };
 
 exports.execute = function(sql, callback) {

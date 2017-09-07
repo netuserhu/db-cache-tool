@@ -36,9 +36,10 @@ app.get('/movie/cinema_detail', routes.cinema_detail);
 
 
 app.get('/db/getConnection', routes.getConnection);
-app.get(/db\/schema\/list\/:db/, routes.getSchemaList);
+app.get('/db/schema/list/:db', routes.getSchemaList);
 app.get('/db/table/list/:db/:schema', routes.getTableList);
 
+app.post('/db/command', routes.commands);
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
