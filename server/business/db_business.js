@@ -25,11 +25,47 @@ exports.getTableList = function(id, schema, callback){
 exports.commands = function(id, schema, commands, callback){
    let commandArray = commands.split(';');
    for(let i=0; i<commandArray.length; i++){
-     console.log(commandArray[i].trim()); 
+     let sql = commandArray[i].trim();
+     
    }
    callback(null , null);
 };
 
+function command(results, id, schema, commands, index, callback){
+  if(index == commands.length){
+  	callback(results);
+  }
+  command = commands[index];
+  if(EXEC_SQL_EXP.match(command)){
+     MysqlManager.execute(id, command, null, function(err,results,fields){
+       let result = {"type":"execute"};
+       result[data] = results;
+       results.push(result);
+       command(results, id, schema, commands, index++, callback);
+     });
+  }else if(SELECT_SQL_EXP.match(command)){
+     MysqlManager.query(id, command, null, function(err,results,fields){
+       let result = {"type":"query"};
+       let data = results.map(p=>{
+         let item = {};
+         for(let i=0;i<fields.length; i++){
+            let columnName = fields[i];
+            item[columnName] = p[columnName];
+         }
+         return item;
+       });
+       result['data'] = data;
+       results.push(result);
+       command(results, id, schema, commands, index++, callback);
+     });
+  }else{
+
+  }
+} 
+
 String.prototype.trim = function() { 
   return this.replace(/(^\s*)|(\s*$)/g, ''); 
 }; 
+
+const EXEC_SQL_EXP = /^INSERT|UPDATE|DELETE\s*/g;
+const SELECT_SQL_EXP =/^SELECT\s*/g;

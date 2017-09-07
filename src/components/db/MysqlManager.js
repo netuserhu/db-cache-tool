@@ -46,7 +46,7 @@ class MysqlManager extends Component {
         commands: commands
       })
     }).then(resp=>resp.json()).then(resp=>{
-      
+       
     });
   };
 
