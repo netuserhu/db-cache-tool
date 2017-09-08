@@ -36,7 +36,7 @@ function command(out, id, schema, commands, index, callback){
   if(command_i.match(EXEC_SQL_EXP)){
      MysqlManager.execute(id, command_i, null, function(err,results,fields){
        let result = {"type":"execute"};
-       result[data] = results;
+       result['data'] = results.message;
        out.push(result);
        command(out, id, schema, commands, ++index, callback);
      });

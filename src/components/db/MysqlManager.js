@@ -1,7 +1,7 @@
 require('../../styles/ConnectionManager.css');
 require('../../styles/MysqlManager.css');
 import React, { Component } from 'react'
-import {Layout, Menu, Icon, Button, Tabs, Input} from 'antd';
+import {Layout, Menu, Icon, Button, Tabs, Input, Table} from 'antd';
 import 'whatwg-fetch';
 const {Header, Content, Footer, Sider} = Layout;
 const {TabPane} = Tabs;
@@ -13,7 +13,7 @@ class MysqlManager extends Component {
   constructor(props) {
     super(props);
     var {id ,db, host, port, user, password, schema} = JSON.parse(this.props.params.data)
-    this.state = {dbConnections:[],tables:[],id:id,db:db,host:host,port:port,user:user,password:password,schema:schema};
+    this.state = {dbConnections:[],tables:[],result:[],id:id,db:db,host:host,port:port,user:user,password:password,schema:schema};
   }
 
   componentWillMount(){
@@ -46,7 +46,7 @@ class MysqlManager extends Component {
         commands: commands
       })
     }).then(resp=>resp.json()).then(resp=>{
-       
+       this.setState({result:resp.data});
     });
   };
 
@@ -58,6 +58,26 @@ class MysqlManager extends Component {
     let tableContent = this.state.tables.map(p=>{
        return <Menu.Item key={p}>{p}</Menu.Item>;
     });
+    let resultContent = this.state.result.map((p,index)=>{
+       let resultView;
+       if(p.type=='query'){
+           let columns = [];
+           let items = p.data[0];
+           for(let item in items){
+              let tmp = {};
+              tmp.title = item;
+              tmp.dataIndex = item;
+              tmp.key = item;
+              tmp.width = 200;
+              tmp.fixed='left';
+              columns.push(tmp);
+           }
+           resultView = <Table scroll={{x:3000,y:1000}} dataSource={p.data} columns={columns} />;
+       }
+       let title = 'Command'+index;
+       return <TabPane tab={title} key={title} >{resultView}</TabPane>;
+    });
+    let tabsContent = <Tabs defaultActiveKey="0">{resultContent}</Tabs>;
     return (
      <Layout>
         <Sider
@@ -80,7 +100,7 @@ class MysqlManager extends Component {
             </TabPane>
           </Tabs>
           <div className="tab-container">
-            
+             {tabsContent}
           </div>
         </Layout>
      </Layout> 
