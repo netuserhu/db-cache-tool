@@ -16,8 +16,10 @@ class ConnectionManager extends Component {
     fetch('/db/getConnection').then(response => response.json()).then(resp => { 
        this.setState({dbConnections:resp.data});
     });
+    
   }
-
+   
+ 
 
   render() {
     let menuContent = this.state.dbConnections.map(p=>{

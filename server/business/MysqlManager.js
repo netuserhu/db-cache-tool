@@ -22,7 +22,7 @@ exports.query=function(db, sql,options,callback){
     }
 }; 
 
-exports.execute=function(db, sql,options,callback){  
+exports.execute=function(db, sql,options,callback){
     let pool = pools[db];
     if(!pool){
       SqliteManager.selectOne('select * from db_info where id='+db, function(err, obj){

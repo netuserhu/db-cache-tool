@@ -24,48 +24,47 @@ exports.getTableList = function(id, schema, callback){
 
 exports.commands = function(id, schema, commands, callback){
    let commandArray = commands.split(';');
-   for(let i=0; i<commandArray.length; i++){
-     let sql = commandArray[i].trim();
-     
-   }
-   callback(null , null);
+   let results = [];
+   command(results, id, schema, commandArray, 0, callback);
 };
 
-function command(results, id, schema, commands, index, callback){
-  if(index == commands.length){
-  	callback(results);
+function command(out, id, schema, commands, index, callback){
+  if(index == commands.length - 1){
+  	return callback(null, out);
   }
-  command = commands[index];
-  if(EXEC_SQL_EXP.match(command)){
-     MysqlManager.execute(id, command, null, function(err,results,fields){
+  let command_i = commands[index].trim().toLowerCase();
+  if(command_i.match(EXEC_SQL_EXP)){
+     MysqlManager.execute(id, command_i, null, function(err,results,fields){
        let result = {"type":"execute"};
        result[data] = results;
-       results.push(result);
-       command(results, id, schema, commands, index++, callback);
+       out.push(result);
+       command(out, id, schema, commands, ++index, callback);
      });
-  }else if(SELECT_SQL_EXP.match(command)){
-     MysqlManager.query(id, command, null, function(err,results,fields){
+  }else if(command_i.match(SELECT_SQL_EXP)){
+     MysqlManager.query(id, command_i, null, function(err,results,fields){
        let result = {"type":"query"};
        let data = results.map(p=>{
-         let item = {};
+         let item = {}; 
          for(let i=0;i<fields.length; i++){
-            let columnName = fields[i];
+            let columnName = fields[i].name;
             item[columnName] = p[columnName];
          }
          return item;
        });
        result['data'] = data;
-       results.push(result);
-       command(results, id, schema, commands, index++, callback);
+       out.push(result);
+       command(out, id, schema, commands, ++index, callback);
      });
   }else{
-
+      let result = {"type":"error","data":"bad command"};
+      out.push(result);
+	  command(out, id, schema, commands, ++index, callback);
   }
-} 
+}; 
 
 String.prototype.trim = function() { 
   return this.replace(/(^\s*)|(\s*$)/g, ''); 
 }; 
 
-const EXEC_SQL_EXP = /^INSERT|UPDATE|DELETE\s*/g;
-const SELECT_SQL_EXP =/^SELECT\s*/g;
+const EXEC_SQL_EXP = /^insert|update|delete\s*/g;
+const SELECT_SQL_EXP =/^select\s*/g;
