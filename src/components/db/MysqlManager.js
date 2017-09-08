@@ -73,6 +73,10 @@ class MysqlManager extends Component {
               columns.push(tmp);
            }
            resultView = <Table scroll={{x:3000,y:1000}} dataSource={p.data} columns={columns} />;
+       }else if(p.type=='execute'){
+           resultView = <span>{p.data}</span>;
+       }else{
+           resultView = <span>{p.data}</span>;
        }
        let title = 'Command'+index;
        return <TabPane tab={title} key={title} >{resultView}</TabPane>;
