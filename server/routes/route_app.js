@@ -57,9 +57,10 @@ exports.cinema_detail = (req, res) => {
 }
 
 exports.getConnection = (req, res) => {
-    Db_Manager.selectConnectionsPromise()
-    .then((result)=>{
+    Db_Manager.selectConnections().then((result)=>{
         sendResult(res, result);
+    }).catch(err=>{
+      sendResult(res, err);
     });
 }
 
