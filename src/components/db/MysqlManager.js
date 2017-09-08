@@ -103,9 +103,9 @@ class MysqlManager extends Component {
                <Button type="primary" onClick={this.clear}>清空</Button>
             </TabPane>
           </Tabs>
-          <div className="tab-container">
+          
              {tabsContent}
-          </div>
+          
         </Layout>
      </Layout> 
     );

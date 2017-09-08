@@ -3,6 +3,7 @@ var constantDb = require('../constants/dbsql');
 var fs = require('fs');
 var dbName = '../database/mineinfo.db';
 var dbAbsoluteName = __dirname + "/" + dbName;
+var Promise = require("bluebird");
 
 init = function() {
 	fs.exists(dbAbsoluteName, function(exists) {
@@ -33,6 +34,33 @@ exports.select = function(sql, callback) {
 		db.close();
 	});
 };
+
+exports.selectPomise = function(sql) {
+	return new Promise(function(resolve, reject){
+        getConn().then(db=>{
+            db.all(sql,function(err, result){
+               if(err){
+                 reject(err);
+               }else{
+               	 resolve(result);
+               }
+            })
+        });   
+     });
+};
+
+getConn = function(){
+	return new Promise(function(resolve, reject){
+       let db = new sqlite3.Database(dbAbsoluteName,function(err){
+            if(err){
+            	reject(err);
+            }else{
+            	resolve(db);
+            }  
+       });
+	});
+}
+
 
 exports.selectOne = function(sql, callback) {
 	let db = new sqlite3.Database(dbAbsoluteName,function(){

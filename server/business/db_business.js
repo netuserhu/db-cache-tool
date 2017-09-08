@@ -9,6 +9,10 @@ exports.selectConnections = function(callback){
    });
 };
 
+exports.selectConnectionsPromise = function(){
+   return SqliteManager.selectPomise('select * from DB_INFO');
+}
+
 
 exports.getSchemaList = function(id, callback){
    MysqlManager.query(id,'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA', null ,function(err, results,fields){
