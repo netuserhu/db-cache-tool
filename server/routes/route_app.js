@@ -66,32 +66,30 @@ exports.getConnection = (req, res) => {
 
 exports.getSchemaList = (req, res) => {
    let {db} = req.params;
-   Db_Manager.getSchemaList(db, (err , result, fields)=>{
-       if(err){
-         sendResult(res,err);
-       }else{
-         sendResult(res,result);
-       }
+   Db_Manager.getSchemaList(db).then((result)=>{
+      let {results, fields} = result;
+      sendResult(res,results);
+   }).catch((err)=>{
+      sendResult(res,err);
    });
 
 };
 
 exports.getTableList = (req, res) => {
    let {db, schema} = req.params;
-   Db_Manager.getTableList(db, schema,(err, results, fields)=>{
-     if(err){
-       sendResult(res, err);
-     }else{
+   Db_Manager.getTableList(db, schema).then((result)=>{
+       let {results, fields} = result;
        let columnName = fields[0].name;
        let tableNames = results.map(p=>{
          return p[columnName];
        });
        sendResult(res, tableNames);
-     }
+   }).catch((err)=>{
+      sendResult(res,err);
    });
 };
 
-exports.commands = (req, res) =>{
+exports.commands = (req, res) => {
   let {id, schema, commands} = req.body;
   Db_Manager.commands(id, schema, commands, (err, result)=>{
       sendResult(res, result);

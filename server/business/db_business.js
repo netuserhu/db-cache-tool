@@ -7,16 +7,12 @@ exports.selectConnections = function(){
    return SqliteManager.selectPomise('select * from DB_INFO');
 };
 
-exports.getSchemaList = function(id, callback){
-   MysqlManager.query(id,'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA', null ,function(err, results,fields){
-      callback(err , results, fields);
-   });
+exports.getSchemaList = function(id){
+   return MysqlManager.queryPromise(id,'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA', null);
 };
 
-exports.getTableList = function(id, schema, callback){
-   MysqlManager.query(id,'show tables from '+schema, null ,function(err,results,fields){
-      callback(err,results,fields);
-   });
+exports.getTableList = function(id, schema){
+  return MysqlManager.queryPromise(id,'show tables from '+schema, null);
 };
 
 exports.commands = function(id, schema, commands, callback){
@@ -31,15 +27,17 @@ function command(out, id, schema, commands, index, callback){
   }
   let command_i = commands[index].trim().toLowerCase();
   if(command_i.match(EXEC_SQL_EXP)){
-     MysqlManager.execute(id, command_i, null, function(err,results,fields){
-       let result = {"type":"execute"};
-       result['data'] = results.message;
-       out.push(result);
+     MysqlManager.execute(id, command_i, null).then((result)=>{
+       let {results,fields} = result;
+       let tmpResult = {"type":"execute"};
+       tmpResult['data'] = results.message;
+       out.push(tmpResult);
        command(out, id, schema, commands, ++index, callback);
      });
   }else if(command_i.match(SELECT_SQL_EXP)){
-     MysqlManager.query(id, command_i, null, function(err,results,fields){
-       let result = {"type":"query"};
+     MysqlManager.query(id, command_i, null).then((result)=>{
+       let {results,fields} = result;
+       let tmpResult = {"type":"query"};
        let data = results.map(p=>{
          let item = {}; 
          for(let i=0;i<fields.length; i++){
@@ -48,14 +46,14 @@ function command(out, id, schema, commands, index, callback){
          }
          return item;
        });
-       result['data'] = data;
-       out.push(result);
+       tmpResult['data'] = data;
+       out.push(tmpResult);
        command(out, id, schema, commands, ++index, callback);
      });
   }else{
       let result = {"type":"error","data":"bad command"};
       out.push(result);
-	  command(out, id, schema, commands, ++index, callback);
+	    command(out, id, schema, commands, ++index, callback);
   }
 }; 
 

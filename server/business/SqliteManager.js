@@ -35,6 +35,20 @@ exports.select = function(sql, callback) {
 	});
 };
 
+exports.selectOnePromise = function(sql, callback) {
+	return new Promise(function(resolve, reject){
+        getConn().then(db=>{
+            db.get(sql,function(err, result){
+               if(err){
+                 reject(err);
+               }else{
+               	 resolve(result);
+               }
+            })
+        });   
+    });
+};
+
 exports.selectPomise = function(sql) {
 	return new Promise(function(resolve, reject){
         getConn().then(db=>{
@@ -49,7 +63,7 @@ exports.selectPomise = function(sql) {
      });
 };
 
-getConn = function(){
+let getConn = function(){
 	return new Promise(function(resolve, reject){
        let db = new sqlite3.Database(dbAbsoluteName,function(err){
             if(err){
