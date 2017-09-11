@@ -15,9 +15,14 @@ function setProxyServer(path, host) {
   var apiProxy = proxy(host, {
     forwardPath:function(req,res){
       return req._parsedUrl.path
+    },
+    decorateRequest:function(req){
+      req.headers['x-requested-with'] = 'XMLHttpRequest';
+      req.headers['credentials'] = "include";
+      return req;
     }
-  })
-  app.use(path, apiProxy)
+  });
+  app.use(path, apiProxy);
   debug('Proxy created: ' + path + ' -> ' + host)
 }
 proxyPaths.forEach((item) => {

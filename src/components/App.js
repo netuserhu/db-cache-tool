@@ -11,14 +11,42 @@ import NProgress from 'nprogress';
 import React, { Component } from 'react'
 import { Router, Route, Link, hashHistory, IndexRoute} from 'react-router';
 // import { Menu, Dropdown, Segment, Icon } from 'semantic-ui-react';
-import fetchIntercept from 'fetch-intercept';
 import { notification } from 'antd';
 import { getStore } from '../util/globalStore';
 var _ = require('lodash');
 import {connect} from 'react-redux';
 const { Header, Content, Footer } = Layout;
 import ConnectionManager from './db/ConnectionManager'
-
+import fetchIntercept from 'fetch-intercept';
+var URL = require('url');
+const unregister = fetchIntercept.register({
+    request: function(url, config){
+      if (typeof config == 'undefined' || typeof config.headers == 'undefined') {
+          config = {
+            ...config,
+            headers: {}
+          };
+      }
+      let location = window.location.href;
+      let params = URL.parse(location,true).query;
+      config['credentials'] = 'include';
+      let code = params.code;
+      if(code){
+        config.headers["x-auth-code"] = code;
+      }
+      return [url , config];
+    },
+    response: function (response) {
+       let status = response.status;
+       if(401 == status){
+         response.json().then(res=>{
+             let callback =  window.location.href;
+             window.location.href=res.location;
+         });
+       }
+       return response;
+    }
+});
 
 class App extends React.Component {
 

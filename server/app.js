@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 let fs = require('fs');
+let session = require('express-session');
 
 var routes = require('./routes/route_app');
 
@@ -19,13 +20,22 @@ app.set('view engine', 'html');// app.set('view engine', 'ejs');
 
 app.use(favicon(path.join(__dirname, 'favicon', 'favicon.ico')));
 app.use(logger('dev'));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+
+app.use(session({
+    secret: 'test', //secret的值建议使用随机字符串
+    cookie: {maxAge: 60 * 1000 * 30} // 过期时间（毫秒）
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
 
+//登录请求回调
+app.get('/oauth/cas/callback', routes.callback);
+
 //处理登录请求
-//app.use(routes.authorize);
+app.use(routes.authorize);
 
 //处理webpack服务请求
 app.get('/__webpack_hmr', function(req, res) {
@@ -35,7 +45,6 @@ app.get('/__webpack_hmr', function(req, res) {
 app.get('/db/getConnection', routes.getConnection);
 app.get('/db/schema/list/:db', routes.getSchemaList);
 app.get('/db/table/list/:db/:schema', routes.getTableList);
-
 app.post('/db/command', routes.commands);
 
 app.use(function(req, res, next) {

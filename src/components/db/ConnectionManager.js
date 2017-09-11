@@ -4,7 +4,6 @@ import {Link} from 'react-router';
 import {Layout, Menu, Icon, Button} from 'antd';
 const {Header, Content, Footer, Sider} = Layout;
 
-
 class ConnectionManager extends Component {
    
   constructor(props) {
