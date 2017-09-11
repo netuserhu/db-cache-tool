@@ -24,16 +24,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//处理登录请求
+//app.use(routes.authorize);
+
 //处理webpack服务请求
 app.get('/__webpack_hmr', function(req, res) {
   res.send('')
-})
-
-
-app.get('/movie/swiper', routes.swiper);
-app.get('/movie/city', routes.city);
-app.get('/movie/cinema_detail', routes.cinema_detail);
-
+});
 
 app.get('/db/getConnection', routes.getConnection);
 app.get('/db/schema/list/:db', routes.getSchemaList);

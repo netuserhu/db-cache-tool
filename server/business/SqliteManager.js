@@ -28,14 +28,19 @@ init = function() {
 
 init();
 
-exports.select = function(sql, callback) {
-	let db = new sqlite3.Database(dbAbsoluteName,function(){
-		db.all(sql, callback);
-		db.close();
+let getConn = function(){
+	return new Promise(function(resolve, reject){
+       let db = new sqlite3.Database(dbAbsoluteName,function(err){
+            if(err){
+            	reject(err);
+            }else{
+            	resolve(db);
+            }  
+       });
 	});
-};
+}
 
-exports.selectOnePromise = function(sql, callback) {
+exports.selectOne = function(sql) {
 	return new Promise(function(resolve, reject){
         getConn().then(db=>{
             db.get(sql,function(err, result){
@@ -49,7 +54,7 @@ exports.selectOnePromise = function(sql, callback) {
     });
 };
 
-exports.selectPomise = function(sql) {
+exports.select = function(sql) {
 	return new Promise(function(resolve, reject){
         getConn().then(db=>{
             db.all(sql,function(err, result){
@@ -63,30 +68,17 @@ exports.selectPomise = function(sql) {
      });
 };
 
-let getConn = function(){
+exports.execute = function(sql) {
 	return new Promise(function(resolve, reject){
-       let db = new sqlite3.Database(dbAbsoluteName,function(err){
-            if(err){
-            	reject(err);
-            }else{
-            	resolve(db);
-            }  
-       });
-	});
-}
-
-
-exports.selectOne = function(sql, callback) {
-	let db = new sqlite3.Database(dbAbsoluteName,function(){
-		db.get(sql, callback);
-		db.close();
-	});
-};
-
-exports.execute = function(sql, callback) {
-	let db = new sqlite3.Database(dbAbsoluteName,function(){
-			db.execute(sql, callback);
-			db.close();
-	});
-    
+        getConn().then(db=>{
+            db.execute(sql, function(err, result){
+               db.close();
+               if(err){
+                 reject(err);
+               }else{
+               	 resolve(result);
+               }
+            });
+        });   
+    });   
 };

@@ -4,15 +4,15 @@ var MysqlManager = require('./MysqlManager');
 let schemas = ["aaaa","bbbb"];
 
 exports.selectConnections = function(){
-   return SqliteManager.selectPomise('select * from DB_INFO');
+   return SqliteManager.select('select * from DB_INFO');
 };
 
 exports.getSchemaList = function(id){
-   return MysqlManager.queryPromise(id,'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA', null);
+   return MysqlManager.query(id,'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA', null);
 };
 
 exports.getTableList = function(id, schema){
-  return MysqlManager.queryPromise(id,'show tables from '+schema, null);
+  return MysqlManager.query(id,'show tables from '+schema, null);
 };
 
 exports.commands = function(id, schema, commands, callback){

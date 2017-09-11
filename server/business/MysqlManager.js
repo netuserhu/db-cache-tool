@@ -37,7 +37,7 @@ let getConn = function(db){
         }
       });
     } else {
-      SqliteManager.selectOnePromise('select * from db_info where id=' + db).then((obj) => {
+      SqliteManager.selectOne('select * from db_info where id=' + db).then((obj) => {
         let {HOST,PORT,USER_NAME,PASSWORD,SCHEMA} = obj;
         pool = mysql.createPool({
           host: HOST,
@@ -77,6 +77,6 @@ exports.execute=function(db, sql,options){
                 }
             });  
        });
-  }
+  });
 }; 
 
