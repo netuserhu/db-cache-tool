@@ -4,12 +4,11 @@ import {Button, Modal, Form, Input, Radio} from 'antd';
 const FormItem = Form.Item;
 
 
-const CollectionCreateForm = Form.create()({
+const CollectionCreateForm = Form.create({
 	onFieldsChange(props, changedFields) {
 		props.onChange(changedFields);
 	},
 	mapPropsToFields(props) {
-		debugger;
 		return {
 		  CONNECTION_NAME:{
 		  	value: props.model.connectionName
@@ -20,7 +19,7 @@ const CollectionCreateForm = Form.create()({
 		  PORT:{
 		  	value: props.model.port
 		  },
-		  USER:{
+		  USER_NAME:{
 		  	value: props.model.user
 		  },
 		  PASSWORD:{
@@ -97,7 +96,7 @@ class ConnectionForm extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {visible: false}
+    this.state = {visible: false, model: {connectionName:'',host:'', port:'', user:'', password:'', schema:''}}
   }
 
   setModel = (data) =>{
@@ -167,8 +166,9 @@ class ConnectionForm extends React.Component {
   }
 
   render() {
+  	debugger;
   	let content;
-  	const model = this.state.model;
+  	let model = this.state.model;
   	if('add'==this.props.type){
   		content =  <CollectionCreateForm ref={this.saveFormRef}
           visible={this.state.visible}
