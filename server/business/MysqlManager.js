@@ -20,6 +20,8 @@ exports.query = function(db, sql,options){
                  resolve(result);
               }
           });  
+     }).catch(err=>{
+        reject(err);
      });
        
   });
@@ -76,6 +78,8 @@ exports.execute=function(db, sql,options){
                    resolve(result);
                 }
             });  
+       }).catch(err=>{
+          reject(err);
        });
   });
 }; 

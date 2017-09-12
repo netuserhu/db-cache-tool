@@ -27,6 +27,10 @@ class MysqlManager extends Component {
         
     });
     fetch('/db/table/list/'+this.state.id+'/'+this.state.schema).then(resp=>resp.json()).then(resp=>{
+        if(resp.data.code){
+          alert(resp.data.sqlMessage);
+          return ;
+        }
         let tables = resp.data;
         this.setState({tables:tables});
     });

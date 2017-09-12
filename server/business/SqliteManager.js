@@ -16,15 +16,13 @@ let init = function() {
           for(let i=0; i<constantDb.getDDL().length; i++){
              let ddl = constantDb.getDDL()[i];
              tasks.push(function(callback){
-               console.log("执行ddl语句"+ddl);
                db.run(ddl,callback);
              });
           }
           for(let i=0; i<constantDb.getDML().length; i++){
              let dml = constantDb.getDML()[i];
              tasks.push(function(callback){
-               console.log("执行dml语句"+dml);
-               db.execute(dml,callback);
+               db.run(dml,callback);
              });
           }
           tasks.push(function(callback){
@@ -88,10 +86,10 @@ exports.select = function(sql) {
      });
 };
 
-exports.execute = function(sql) {
+exports.execute = function(sql, params) {
 	return new Promise(function(resolve, reject){
         getConn().then(db=>{
-            db.execute(sql, function(err, result){
+            db.run(sql,params,function(err, result){
                db.close();
                if(err){
                  reject(err);

@@ -3,8 +3,13 @@ var MysqlManager = require('./MysqlManager');
 
 let schemas = ["aaaa","bbbb"];
 
-exports.selectConnections = function(){
-   return SqliteManager.select('select * from DB_INFO');
+exports.selectConnections = function(userid){
+   return SqliteManager.select('select * from DB_INFO Where BELONG = "-1" or BELONG ='+ userid);
+};
+
+exports.createConnections = function(params,userid){
+   let options = [params.CONNECTION_NAME, params.HOST, params.PORT, params.USER_NAME, params.PASSWORD, params.SCHEMA, userid];
+   return SqliteManager.execute('insert into DB_INFO(CONNECTION_NAME, HOST, PORT, USER_NAME, PASSWORD, SCHEMA, BELONG) values(?,?,?,?,?,?,?)',options);
 };
 
 exports.getSchemaList = function(id){

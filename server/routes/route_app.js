@@ -19,7 +19,7 @@ function sendResult(res, result){
 
 exports.getConnection = (req, res) => {
     let user = req.session.username;
-    Db_Manager.selectConnections().then((result)=>{
+    Db_Manager.selectConnections(user.id).then((result)=>{
         sendResult(res, result);
     }).catch(err=>{
       sendResult(res, err);
@@ -33,7 +33,7 @@ exports.getSchemaList = (req, res) => {
       sendResult(res,results);
    }).catch((err)=>{
       sendResult(res,err);
-   });
+   }); 
 
 };
 
@@ -60,19 +60,24 @@ exports.commands = (req, res) => {
 
 exports.createConnection = (req, res) => {
   let user = req.session.username;
-  
+  let params = req.body;
+  Db_Manager.createConnections(params,user.id).then((result)=>{
+        sendResult(res, result);
+    }).catch(err=>{
+      sendResult(res, err);
+    });
 
 };
 
 
 exports.editConnection = (req, res) => {
   let user = req.session.username;
-  
+
 };
 
 exports.getAccessConnection = (req, res) => {
    let user = req.session.username;
-   
+
 };
 
 

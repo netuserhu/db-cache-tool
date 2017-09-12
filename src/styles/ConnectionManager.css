@@ -4,3 +4,19 @@
   border-radius: 6px;
   margin: 16px;
 }
+
+.gutter-example .ant-row > div {
+  background: transparent;
+  border: 0;
+  margin-left:50px;
+  margin-top:20px;
+}
+
+.gutter-box {
+  background: #cccccc;
+  padding: 5px 0;
+  height: 220px;
+  font-size: 18px;
+  color:#fff;
+  border-radius: 6px;
+}
