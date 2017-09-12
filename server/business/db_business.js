@@ -16,7 +16,11 @@ exports.getTableList = function(id, schema){
 };
 
 exports.commands = function(id, schema, commands, callback){
-   let commandArray = commands.split(';');
+   let out = commands.trim();
+   if(out &&';'!=out.charAt(out.length-1)){
+      out = out+";";
+   }
+   let commandArray = out.split(';');
    let results = [];
    command(results, id, schema, commandArray, 0, callback);
 };

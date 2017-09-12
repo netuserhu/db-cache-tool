@@ -61,27 +61,7 @@ exports.commands = (req, res) => {
 exports.authorize = (req, res, next) =>{
    let session = req.session;
    if (session.username == null) {
-      let code = req.headers["x-auth-code"];
-      if(code){
-        request.get('http://cas.qima-inc.com/oauth/users/self?code='+code)
-        .set('authorization', 'oauth 3ab75c8e-e52d-4f6a-a433-7a871e2d0a04')
-        .end((err, r) => {
-          if (err){ 
-            doLogin(req, res);
-            return;
-          }
-          if (r.body.code !== 0) {
-            doLogin(req, res);
-            return;
-          }
-          let user = r.body.data.value;
-          session.username =  user;
-          //sendResult(res, 111)
-          next();
-        });
-      }else{
         doLogin(req , res);
-      }
     }else{
       next();
     }
@@ -109,10 +89,26 @@ exports.callback = (req, res) =>{
       doLogin(req, res);
       return;
   }
-  let qs = req.query.qs;
-  if (qs&&qs!='undefined') {
-    res.redirect(qs);
-  } else {
-    res.redirect("http://localhost:3000?code="+code);
-  }
+  request.get('http://cas.qima-inc.com/oauth/users/self?code='+code)
+        .set('authorization', 'oauth 3ab75c8e-e52d-4f6a-a433-7a871e2d0a04')
+        .end((err, r) => {
+          if (err){ 
+            doLogin(req, res);
+            return;
+          }
+          if (r.body.code !== 0) {
+            doLogin(req, res);
+            return;
+          }
+          let user = r.body.data.value;
+          req.session.regenerate(function(){
+              req.session.username = user;
+              let qs = req.query.qs;
+              if (qs&&qs!='undefined') {
+                res.redirect(qs);
+              } else {
+                res.redirect("http://localhost:3000");
+              }
+          });
+        });
 };
