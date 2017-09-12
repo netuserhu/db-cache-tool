@@ -61,23 +61,45 @@ exports.commands = (req, res) => {
 exports.createConnection = (req, res) => {
   let user = req.session.username;
   let params = req.body;
-  Db_Manager.createConnections(params,user.id).then((result)=>{
-        sendResult(res, result);
-    }).catch(err=>{
-      sendResult(res, err);
-    });
+  Db_Manager.createConnection(params,user.id).then((result)=>{
+    sendResult(res, result);
+  }).catch(err=>{
+    sendResult(res, err);
+  });
 
 };
-
 
 exports.editConnection = (req, res) => {
+  let {db} = req.params;
   let user = req.session.username;
-
+  let params = req.body;
+  params.ID = db;
+  Db_Manager.editConnection(params,user.id).then((result)=>{
+    sendResult(res, result);
+  }).catch(err=>{
+    sendResult(res, err);
+  });
 };
+
+exports.deleteConnection = (req, res) => {
+  let {db} = req.params;
+  let user = req.session.username;
+  Db_Manager.deleteConnection(db,user.id).then((result)=>{
+    sendResult(res, result);
+  }).catch(err=>{
+    sendResult(res, err);
+  });
+};
+
 
 exports.getAccessConnection = (req, res) => {
    let user = req.session.username;
-
+   let params = req.body;
+   Db_Manager.createConnections(params,user.id).then((result)=>{
+          sendResult(res, result);
+   }).catch(err=>{
+      sendResult(res, err);
+   });
 };
 
 

@@ -62,7 +62,6 @@ let getConn = function(db){
 }
 
 
-
 exports.execute=function(db, sql,options){
   return new Promise(function(resolve, reject){
       getConn(db).then(conn=>{

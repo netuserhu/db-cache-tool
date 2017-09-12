@@ -7,9 +7,19 @@ exports.selectConnections = function(userid){
    return SqliteManager.select('select * from DB_INFO Where BELONG = "-1" or BELONG ='+ userid);
 };
 
-exports.createConnections = function(params,userid){
+exports.createConnection = function(params,userid){
    let options = [params.CONNECTION_NAME, params.HOST, params.PORT, params.USER_NAME, params.PASSWORD, params.SCHEMA, userid];
    return SqliteManager.execute('insert into DB_INFO(CONNECTION_NAME, HOST, PORT, USER_NAME, PASSWORD, SCHEMA, BELONG) values(?,?,?,?,?,?,?)',options);
+};
+
+exports.editConnection = function(params,userid){
+   let options = [params.CONNECTION_NAME, params.HOST, params.PORT, params.USER_NAME, params.PASSWORD, params.SCHEMA, userid, params.ID];
+   return SqliteManager.execute('update DB_INFO set CONNECTION_NAME=?, HOST=?, PORT=?, USER_NAME=?, PASSWORD=?, SCHEMA=? where BELONG=? and id=?',options);
+};
+
+exports.deleteConnection = function(id,userid){
+   let options = [userid, id];
+   return SqliteManager.execute('delete from DB_INFO where BELONG=? and id=?',options);
 };
 
 exports.getSchemaList = function(id){

@@ -49,6 +49,7 @@ app.post('/db/command', routes.commands);
 
 app.post('/db/createConnection', routes.createConnection);
 app.post('/db/editConnection/:db', routes.editConnection);
+app.get('/db/deleteConnection/:db', routes.deleteConnection);
 app.get('/db/getAccessConnection', routes.getAccessConnection);
 
 app.use(function(req, res, next) {

@@ -29,17 +29,30 @@ class ConnectionManager extends Component {
   };
 
   showEditConnection = (data)=>{
-    this.refs.EditConnectionForm.setModal(data);
+    this.refs.EditConnectionForm.setModel(data);
     this.refs.EditConnectionForm.showModal();
-  }
+  };
+
+  deleteConnection = (id)=>{
+    fetch('/db/deleteConnection/'+id).then(response=>response.json()).then(resp=>{
+       this.reloadData();
+    });
+  };
   
-  addNewConnection(){
+  addNewConnection = ()=>{
+    this.reloadData();
+  };
 
-  }
+  updateConnection = ()=>{
+    this.reloadData();
+  };
 
-  updateConnection(){
-
-  }
+  reloadData = ()=>{
+    fetch('/db/getConnection').then(response => response.json()).then(resp => { 
+       this.setState({dbConnections:resp.data});
+    });
+  };
+  
 
   render() {
     let menuContent = this.state.dbConnections.map(p=>{
@@ -51,7 +64,8 @@ class ConnectionManager extends Component {
                  <span className="nav-text">
                     <Link to={path}>{p.CONNECTION_NAME}</Link>
                  </span>
-                 <Button onClick={()=>{this.showEditConnection(datainfo)}}><Icon type="database" /></Button>
+                 <Button shape="circle" style={{"margin-left":"10px"}} onClick={()=>{this.showEditConnection(datainfo)}}><Icon type="edit" /></Button>
+                 <Button shape="circle" style={{"margin-left":"2px"}} onClick={()=>{this.deleteConnection(p.ID)}}><Icon type="delete" /></Button>
               </Menu.Item>;
     });
     
@@ -106,7 +120,6 @@ class ConnectionManager extends Component {
         </Sider>
         <Layout>
           <Content>
-            <p>最近打开的连接:</p>
               {accessContent}
           </Content>
           <ConnectionForm ref="AddConnectionForm" afterConnectionNew={this.addNewConnection} type="add" />

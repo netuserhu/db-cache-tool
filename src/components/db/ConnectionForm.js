@@ -10,24 +10,7 @@ const CollectionCreateForm = Form.create({
 	},
 	mapPropsToFields(props) {
 		return {
-		  CONNECTION_NAME:{
-		  	value: props.model.connectionName
-		  },
-		  HOST:{
-		  	value: props.model.host
-		  },
-		  PORT:{
-		  	value: props.model.port
-		  },
-		  USER_NAME:{
-		  	value: props.model.user
-		  },
-		  PASSWORD:{
-		  	value: props.model.password
-		  },
-		  SCHEMA:{
-		  	value: props.model.schema
-		  }
+		  ...props.model
 		};
 	},
 	onValuesChange(_, values) {
@@ -37,13 +20,6 @@ const CollectionCreateForm = Form.create({
     const { visible, onCancel, onCreate, form , title, okButtonText} = props;
     const { getFieldDecorator } = form;
     return (
-      <Modal
-        visible={visible}
-        title={title}
-        okText={okButtonText}
-        onCancel={onCancel}
-        onOk={onCreate}
-      >
         <Form layout="vertical">
           <FormItem label="连接名">
             {getFieldDecorator('CONNECTION_NAME', {
@@ -88,7 +64,7 @@ const CollectionCreateForm = Form.create({
             )}
           </FormItem>
         </Form>
-      </Modal>
+
     );
   });
 
@@ -100,7 +76,15 @@ class ConnectionForm extends React.Component {
   }
 
   setModel = (data) =>{
-  	this.setState({model: data});
+    let model = {};
+    model.ID = {value:data.id};
+    model.HOST = {value:data.host};
+    model.PORT = {value:data.port};
+    model.USER_NAME = {value:data.user};
+    model.PASSWORD = {value:data.password};
+    model.SCHEMA = {value:data.schema};
+    model.CONNECTION_NAME = {value:data.connectionName};
+  	this.setState({model: model});
   }
 
   showModal = () => {
@@ -113,12 +97,12 @@ class ConnectionForm extends React.Component {
 
   handleFormChange = (changedFields) => {
     this.setState({
-      fields: { ...this.state.fields, ...changedFields },
+      model: { ...this.state.model, ...changedFields },
     });
   }
 
   handleCreate = () => {
-    form.validateFields((err, values) => {
+    this.form.validateFields((err, values) => {
       if (err) {
         return;
       }
@@ -130,9 +114,9 @@ class ConnectionForm extends React.Component {
 	    },
 	    body: JSON.stringify(values)
 	  }).then(response=>response.json()).then(resp=>{
-		  //form.resetFields();
+		  this.form.resetFields();
 		  this.setState({ visible: false });
-		  //this.props.afterConnectionNew();
+		  this.props.afterConnectionNew();
 	  });
       
     });
@@ -144,19 +128,19 @@ class ConnectionForm extends React.Component {
       if (err) {
         return;
       }
-	  fetch("/db/editConnection", {
-	    method: "POST",
-	    headers: {
-	       'accept': 'application/json',
-	       'Content-Type': 'application/json'
-	    },
-	    body: JSON.stringify(values)
-	  }).then(response=>response.json()).then(resp=>{
-		  //form.resetFields();
-		  this.setState({ visible: false });
-		  //this.props.afterConnectionNew();
-	  });
-      
+      debugger;
+  	  fetch("/db/editConnection/"+this.state.model.ID.value, {
+  	    method: "POST",
+  	    headers: {
+  	       'accept': 'application/json',
+  	       'Content-Type': 'application/json'
+  	    },
+  	    body: JSON.stringify(values)
+  	  }).then(response=>response.json()).then(resp=>{
+  		  this.form.resetFields();
+  		  this.setState({ visible: false });
+  		  this.props.afterConnectionUpdate();
+  	  });
     });
   }
 
@@ -166,28 +150,28 @@ class ConnectionForm extends React.Component {
   }
 
   render() {
-  	debugger;
-  	let content;
   	let model = this.state.model;
+    let onCreate;
+    let title = "";
+    let buttonText = "";
   	if('add'==this.props.type){
-  		content =  <CollectionCreateForm ref={this.saveFormRef}
-          visible={this.state.visible}
-          onCancel={this.handleCancel}
-          onCreate={this.handleCreate}
-          title="创建连接"
-          okButtonText="创建" />;
+  		onCreate = this.handleCreate;
+      title = "创建连接";
+      buttonText = "创建";
   	}else if('edit'==this.props.type){
-		  content =  <CollectionCreateForm ref={this.saveFormRef}
-          visible={this.state.visible}
-          onCancel={this.handleCancel}
-          onCreate={this.handleUpdate}
-          title="编辑连接"
-          okButtonText="更新"
-          model={model} />;
+		  onCreate = this.handleUpdate;
+      title = "编辑连接";
+      buttonText = "更新";
   	}
-  	
     return (
-        {content}
+        <Modal
+        visible={this.state.visible}
+        title={title}
+        okText={buttonText}
+        onCancel={this.handleCancel}
+        onOk={onCreate}>
+         <CollectionCreateForm ref={this.saveFormRef} model={model} onChange={this.handleFormChange}/>
+        </Modal>
     );
   }
 }

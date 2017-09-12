@@ -46,7 +46,9 @@ const config = {
     '/db/table/list': 'http://localhost:9000',
     '/db/command':'http://localhost:9000',
     '/db/getUserAccess': 'http://localhost:9000',
-    '/db/createConnection': 'http://localhost:9000'
+    '/db/createConnection': 'http://localhost:9000',
+    '/db/editConnection': 'http://localhost:9000',
+    '/db/deleteConnection': 'http://localhost:9000'
   },
 
   // ----------------------------------
