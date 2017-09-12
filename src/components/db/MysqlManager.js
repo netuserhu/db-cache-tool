@@ -1,5 +1,6 @@
 require('../../styles/ConnectionManager.css');
 require('../../styles/MysqlManager.css');
+import 'antd/dist/antd.css';
 import React, { Component } from 'react'
 import {Layout, Menu, Icon, Button, Tabs, Input, Table} from 'antd';
 import 'whatwg-fetch';
@@ -73,10 +74,9 @@ class MysqlManager extends Component {
               tmp.dataIndex = item;
               tmp.key = item;
               tmp.width = 200;
-              tmp.fixed='left';
               columns.push(tmp);
            }
-           resultView = <Table scroll={{x:3000,y:1000}} dataSource={p.data} columns={columns} />;
+           resultView = <Table useFixedHeader="true" scroll={{x:5000,y:1000}} dataSource={p.data} columns={columns} />;
        }else if(p.type=='execute'){
            resultView = <span>{p.data}</span>;
        }else{
