@@ -47,6 +47,10 @@ app.get('/db/schema/list/:db', routes.getSchemaList);
 app.get('/db/table/list/:db/:schema', routes.getTableList);
 app.post('/db/command', routes.commands);
 
+app.post('/db/createConnection', routes.createConnection);
+app.post('/db/editConnection/:db', routes.editConnection);
+app.get('/db/getAccessConnection', routes.getAccessConnection);
+
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

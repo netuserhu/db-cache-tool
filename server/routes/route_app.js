@@ -18,6 +18,7 @@ function sendResult(res, result){
 }
 
 exports.getConnection = (req, res) => {
+    let user = req.session.username;
     Db_Manager.selectConnections().then((result)=>{
         sendResult(res, result);
     }).catch(err=>{
@@ -57,7 +58,25 @@ exports.commands = (req, res) => {
   });
 };
 
+exports.createConnection = (req, res) => {
+  let user = req.session.username;
+  
 
+};
+
+
+exports.editConnection = (req, res) => {
+  let user = req.session.username;
+  
+};
+
+exports.getAccessConnection = (req, res) => {
+   let user = req.session.username;
+   
+};
+
+
+// 认证
 exports.authorize = (req, res, next) =>{
    let session = req.session;
    if (session.username == null) {
