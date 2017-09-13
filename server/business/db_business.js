@@ -1,8 +1,6 @@
 var SqliteManager = require('./SqliteManager');
 var MysqlManager = require('./MysqlManager');
 
-let schemas = ["aaaa","bbbb"];
-
 exports.selectConnections = function(userid){
    return SqliteManager.select('select * from DB_INFO Where BELONG = "-1" or BELONG ='+ userid);
 };
@@ -54,7 +52,7 @@ function command(out, id, schema, commands, index, callback){
        command(out, id, schema, commands, ++index, callback);
      }).catch(err=>{
        let tmpResult = {"type":"error"};
-       tmpResult['data'] = err;
+       tmpResult['data'] = err.sqlMessage;
        out.push(tmpResult);
        command(out, id, schema, commands, ++index, callback);
      });;
@@ -75,7 +73,7 @@ function command(out, id, schema, commands, index, callback){
        command(out, id, schema, commands, ++index, callback);
      }).catch(err=>{
        let tmpResult = {"type":"error"};
-       tmpResult['data'] = err;
+       tmpResult['data'] = err.sqlMessage;
        out.push(tmpResult);
        command(out, id, schema, commands, ++index, callback);
      });

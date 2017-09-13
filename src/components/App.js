@@ -44,6 +44,12 @@ const unregister = fetchIntercept.register({
              window.location.href=res.location;
          });
        }
+       if(500 == status){
+         response.json().then(res=>{
+            let error = res.msg;
+            alert(error);
+         })
+       }
        return response;
     }
 });

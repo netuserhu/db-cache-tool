@@ -87,6 +87,7 @@ class ConnectionManager extends Component {
       });
       firstContent = <Row gutter={16}>{firstContent}</Row>;
     }
+    
     if(this.state.access.length>3){
       secondAccess = this.state.access.slice(3,6);
       secondContent = secondAccess.map(p=>{

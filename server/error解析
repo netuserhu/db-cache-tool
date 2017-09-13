@@ -1,0 +1,28 @@
+异常规范
+
+服务器所有异常
+
+500采用错误码+固定的body形式
+{
+  "code":"",
+  "msg": ""
+}	
+
+401
+{
+  "requestUrl":"要跳转的页面"
+}
+
+
+mysql的错误
+
+1. sql语句执行错误
+code
+errno
+sqlMessage
+
+2. 连接异常
+code
+errno
+message
+

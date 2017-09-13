@@ -21,7 +21,11 @@ exports.query = function(db, sql,options){
               }
           });  
      }).catch(err=>{
-        reject(err);
+        //对连接无法连接的异常统一到sql异常
+        let error = {};
+        error.code = err.code;
+        error.sqlMessage = err.message;
+        reject(error);
      });
        
   });
@@ -78,7 +82,11 @@ exports.execute=function(db, sql,options){
                 }
             });  
        }).catch(err=>{
-          reject(err);
+          //对连接无法连接的异常统一到sql异常
+          let error = {};
+          error.code = err.code;
+          error.sqlMessage = err.message;
+          reject(error);
        });
   });
 }; 

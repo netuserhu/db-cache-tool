@@ -37,10 +37,6 @@ app.get('/oauth/cas/callback', routes.callback);
 //处理登录请求
 app.use(routes.authorize);
 
-//处理webpack服务请求
-app.get('/__webpack_hmr', function(req, res) {
-  res.send('')
-});
 
 app.get('/db/getConnection', routes.getConnection);
 app.get('/db/schema/list/:db', routes.getSchemaList);

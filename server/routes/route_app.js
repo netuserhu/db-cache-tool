@@ -7,8 +7,6 @@ var request = require('superagent');
 function sendResult(res, result){
    try{
      let sendData = {
-            errno: 0,
-            msg: 'ok',
             data: result
       };
      res.send(JSON.stringify(sendData));
@@ -17,12 +15,20 @@ function sendResult(res, result){
    }
 }
 
+function sendError(res , status , error){
+     res.status(status);
+     res.send(JSON.stringify(error));
+}
+
 exports.getConnection = (req, res) => {
     let user = req.session.username;
     Db_Manager.selectConnections(user.id).then((result)=>{
         sendResult(res, result);
     }).catch(err=>{
-      sendResult(res, err);
+      let errorMsg = {};
+      errorMsg.code = err.code;
+      errorMsg.msg = err.sqlMessage;
+      sendError(res, 500 ,errorMsg);
     });
 }
 
@@ -32,7 +38,10 @@ exports.getSchemaList = (req, res) => {
       let {results, fields} = result;
       sendResult(res,results);
    }).catch((err)=>{
-      sendResult(res,err);
+      let errorMsg = {};
+      errorMsg.code = err.code;
+      errorMsg.msg = err.sqlMessage;
+      sendError(res, 500 ,errorMsg);
    }); 
 
 };
@@ -47,7 +56,10 @@ exports.getTableList = (req, res) => {
        });
        sendResult(res, tableNames);
    }).catch((err)=>{
-      sendResult(res,err);
+      let errorMsg = {};
+      errorMsg.code = err.code;
+      errorMsg.msg = err.sqlMessage;
+      sendError(res, 500 ,errorMsg);
    });
 };
 
@@ -55,7 +67,10 @@ exports.commands = (req, res) => {
   let {id, schema, commands} = req.body;
   Db_Manager.commands(id, schema, commands, (err, result)=>{
       if(err){
-        sendResult(res, err); 
+        let errorMsg = {};
+        errorMsg.code = err.code;
+        errorMsg.msg = err.sqlMessage;
+        sendError(res, 500 ,errorMsg); 
       }else{
         sendResult(res, result);
       }
@@ -68,7 +83,10 @@ exports.createConnection = (req, res) => {
   Db_Manager.createConnection(params,user.id).then((result)=>{
     sendResult(res, result);
   }).catch(err=>{
-    sendResult(res, err);
+      let errorMsg = {};
+      errorMsg.code = err.code;
+      errorMsg.msg = err.sqlMessage;
+      sendError(res, 500 ,errorMsg);
   });
 
 };
@@ -81,7 +99,10 @@ exports.editConnection = (req, res) => {
   Db_Manager.editConnection(params,user.id).then((result)=>{
     sendResult(res, result);
   }).catch(err=>{
-    sendResult(res, err);
+      let errorMsg = {};
+      errorMsg.code = err.code;
+      errorMsg.msg = err.sqlMessage;
+      sendError(res, 500 ,errorMsg);
   });
 };
 
@@ -91,7 +112,10 @@ exports.deleteConnection = (req, res) => {
   Db_Manager.deleteConnection(db,user.id).then((result)=>{
     sendResult(res, result);
   }).catch(err=>{
-    sendResult(res, err);
+      let errorMsg = {};
+      errorMsg.code = err.code;
+      errorMsg.msg = err.sqlMessage;
+      sendError(res, 500 ,errorMsg);
   });
 };
 
@@ -100,9 +124,12 @@ exports.getAccessConnection = (req, res) => {
    let user = req.session.username;
    let params = req.body;
    Db_Manager.createConnections(params,user.id).then((result)=>{
-          sendResult(res, result);
+      sendResult(res, result);
    }).catch(err=>{
-      sendResult(res, err);
+      let errorMsg = {};
+      errorMsg.code = err.code;
+      errorMsg.msg = err.sqlMessage;
+      sendError(res, 500 ,errorMsg);
    });
 };
 
@@ -123,8 +150,7 @@ let doLogin = (req, res)=>{
      let map = {};
      map.location = "https://cas.qima-inc.com/public/oauth/authorize?name=db-cache-tool-local&qs="+req.requestUrl;
      map.callbackUrl = req.requestUrl;
-     res.status(401);
-     res.send(JSON.stringify(map));
+     sendError(res ,401 , map);
   }else{
      let redirectUrl = "https://cas.qima-inc.com/public/oauth/authorize?name=db-cache-tool-local&qs="+req.requestUrl;
      res.redirect(redirectUrl);
