@@ -54,7 +54,11 @@ exports.getTableList = (req, res) => {
 exports.commands = (req, res) => {
   let {id, schema, commands} = req.body;
   Db_Manager.commands(id, schema, commands, (err, result)=>{
-      sendResult(res, result);
+      if(err){
+        sendResult(res, err); 
+      }else{
+        sendResult(res, result);
+      }
   });
 };
 

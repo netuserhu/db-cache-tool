@@ -52,7 +52,12 @@ function command(out, id, schema, commands, index, callback){
        tmpResult['data'] = results.message;
        out.push(tmpResult);
        command(out, id, schema, commands, ++index, callback);
-     });
+     }).catch(err=>{
+       let tmpResult = {"type":"error"};
+       tmpResult['data'] = err;
+       out.push(tmpResult);
+       command(out, id, schema, commands, ++index, callback);
+     });;
   }else if(command_i.match(SELECT_SQL_EXP)){
      MysqlManager.query(id, command_i, null).then((result)=>{
        let {results,fields} = result;
@@ -66,6 +71,11 @@ function command(out, id, schema, commands, index, callback){
          return item;
        });
        tmpResult['data'] = data;
+       out.push(tmpResult);
+       command(out, id, schema, commands, ++index, callback);
+     }).catch(err=>{
+       let tmpResult = {"type":"error"};
+       tmpResult['data'] = err;
        out.push(tmpResult);
        command(out, id, schema, commands, ++index, callback);
      });
