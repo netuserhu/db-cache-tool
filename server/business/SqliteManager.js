@@ -1,8 +1,9 @@
 var sqlite3 = require('sqlite3');
 var constantDb = require('../constants/dbsql');
 var fs = require('fs');
-var dbName = '../database/mineinfo.db';
-var dbAbsoluteName = __dirname + "/" + dbName;
+
+var sqliteDir = process.env.NODE_DATA;
+var dbAbsoluteName = sqliteDir+'/database/mineinfo.db';
 var Promise = require("bluebird");
 var async = require('async');
 
