@@ -3,6 +3,7 @@ let session = require('session');
 
 let url = require('url'); 
 var request = require('superagent'); 
+let indexUrl = process.env.INDEX||"http://localhost:3000";
 
 function sendResult(res, result){
    try{
@@ -18,6 +19,10 @@ function sendResult(res, result){
 function sendError(res , status , error){
      res.status(status);
      res.send(JSON.stringify(error));
+}
+
+exports.index = (req, res) => {
+    res.render('index');
 }
 
 exports.getConnection = (req, res) => {
@@ -183,7 +188,7 @@ exports.callback = (req, res) =>{
               if (qs&&qs!='undefined') {
                 res.redirect(qs);
               } else {
-                res.redirect("http://localhost:3000");
+                res.redirect(indexUrl);
               }
           });
         });

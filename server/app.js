@@ -48,6 +48,11 @@ app.post('/db/editConnection/:db', routes.editConnection);
 app.get('/db/deleteConnection/:db', routes.deleteConnection);
 app.get('/db/getAccessConnection', routes.getAccessConnection);
 
+app.get('/app', routes.index);
+app.get('/', (req, res) => {
+    res.redirect('app');
+});
+
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;

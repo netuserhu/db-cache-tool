@@ -24,9 +24,9 @@ class MysqlManager extends Component {
      1. 读取数据库有的所有schema
      2. 读取schema对应的表数据
     */
-    fetch('/db/schema/list/'+this.state.id).then(resp=>resp.json()).then(resp=>{
+    // fetch('/db/schema/list/'+this.state.id).then(resp=>resp.json()).then(resp=>{
         
-    });
+    // });
     fetch('/db/table/list/'+this.state.id+'/'+this.state.schema).then(resp=>resp.json()).then(resp=>{
         if(resp.data.code){
           alert(resp.data.sqlMessage);
@@ -91,9 +91,6 @@ class MysqlManager extends Component {
         <Sider
           width="300" >
           <div className="logo" />
-          <div style={{width:"50px",height:"31px",float:"left","margin":"16px 0px 0px 10px"}}>
-             <Button type="primary"><Icon type="plus" style={{fontSize:18,color:'#fff'}}/></Button>
-          </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']}>
              {tableContent}
           </Menu>
