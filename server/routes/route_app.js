@@ -170,7 +170,7 @@ exports.callback = (req, res) =>{
       doLogin(req, res);
       return;
   }
-  request.get('http://cas.qima-inc.com/oauth/users/self?code='+code)
+  request.get('http://***/users/self?code='+code)
         .set('authorization', 'oauth 3ab75c8e-e52d-4f6a-a433-7a871e2d0a04')
         .end((err, r) => {
           if (err){ 
