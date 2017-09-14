@@ -14,7 +14,7 @@
 ## 如何运行
 下载项目
 ```
- git clone https://github.com/canfoo/react-taopiaopiao.git
+ git clone git@github.com:netuserhu/db-cache-tool.git
 ```
  打开一个终端（称这个终端为A终端）进入到react-taopiaopiao目录安装依赖包（注意：如果`npm install` 不能正常安装完成，请使用`cnpm install`进行安装）
 ```
